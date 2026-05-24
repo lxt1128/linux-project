@@ -18,7 +18,6 @@ fi
 
 echo "[$(date '+%F %T')] 今日复习: $(basename "$note")" >> "$REVIEW_LOG"
 cat "$note"
-EOF
 
 # 复习间隔（天）
 INTERVALS=(1 2 4 7 15 30)
@@ -58,3 +57,4 @@ fi
 choice=${to_review[$RANDOM % ${#to_review[@]} ]}
 echo "[$(date '+%F %T')] 今日复习: $(basename "$choice")" >> "$REVIEW_LOG"
 cat "$choice"
+EOF
