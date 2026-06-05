@@ -61,3 +61,11 @@ check_duplicate() {
 
     return 1  # 1表示无重复
 }
+#函数5：从 MD 文件中提取字段
+extract_field() {
+    grep "^$2:" "$1" | head -1 | sed 's/^[^:]*: //' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+EOF_COMMON
+
+echo "✅ 通用工具函数创建完成"
+echo ""
