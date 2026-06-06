@@ -32,7 +32,7 @@ id=$1
 echo "正在查找ID为 $id 的错题..."
 
 # 全局搜索该ID的错题文件
-file_path=$(find ../../data/subjects -name "*${id}_*.md" -type f | head -n 1)
+file_path=$(find "$PROJECT_ROOT/data/subjects" -name "*${id}_*.md" -type f | head -n 1)
 
 if [ -z "$file_path" ]; then
     log "ERROR" "未找到ID为 $id 的错题"
@@ -44,7 +44,7 @@ echo "✅ 找到错题: $file_path"
 echo ""
 
 # 步骤1：备份原文件（版本控制）
-revision_dir="../../data/revisions/$id"
+revision_dir="$PROJECT_ROOT/data/revisions/$id"
 mkdir -p $revision_dir
 revision_file="$revision_dir/$(date +%Y%m%d_%H%M%S).bak"
 cp $file_path $revision_file
@@ -96,7 +96,7 @@ case $field_idx in
     5)
         echo ""
         echo "=== 历史版本列表 ==="
-        ls -1 $revision_dir | sort -r
+        ls -1 "$revision_dir" | sort -r
         echo ""
         read -p "输入要回退的版本文件名（或按回车取消）: " version
         if [ -n "$version" ] && [ -f "$revision_dir/$version" ]; then
