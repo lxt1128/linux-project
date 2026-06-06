@@ -29,7 +29,7 @@ echo ""
 
 # 步骤1：选择科目
 echo "请选择科目（输入对应序号）："
-source ../../config/global.conf
+source "$PROJECT_ROOT/config/global.conf"
 for i in "${!SUBJECTS[@]}"; do
     echo "$((i+1)). ${SUBJECTS[$i]}"
 done
@@ -84,7 +84,7 @@ fi
 
 # 步骤3：生成唯一ID和存储路径
 # 顺序自增ID：1、2、3、4...
-ID_FILE="../../data/id_counter.txt"
+ID_FILE="$PROJECT_ROOT/data/id_counter.txt"
 # 如果文件不存在，初始化为1
 if [ ! -f "$ID_FILE" ]; then
   echo 1 > "$ID_FILE"
@@ -97,7 +97,7 @@ echo $next_id > "$ID_FILE"
 timestamp=$(date +%Y%m%d_%H%M%S)
 # 按科目/年/月/日分层存储
 date_dir=$(date +%Y/%m/%d)
-save_dir="../../data/subjects/$subject/$date_dir"
+save_dir="$PROJECT_ROOT/data/subjects/$subject/$date_dir"
 # 自动创建存储目录（如果不存在）
 mkdir -p $save_dir
 file_path="$save_dir/${id}_${timestamp}.md"
