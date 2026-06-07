@@ -124,6 +124,7 @@ $answer
 $analysis
 
 ## 错误原因
+$reason
 EOF
 
 # 步骤5：记录日志并提示成功
