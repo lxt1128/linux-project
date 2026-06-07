@@ -43,13 +43,27 @@ show_menu() {
     echo "=================================="
     echo "当前时间: $(date '+%Y-%m-%d %H:%M:%S')"
     echo "=================================="
-    echo "1. 📝 录入错题"
-    echo "2. ✏️  编辑错题"
-    echo "3. 📚 复习错题"
-    echo "4. 📊 统计报告"
-    echo "5. ⏰ 安装定时任务"
-    echo "6. ❓ 帮助信息"
-    echo "7. 🚪 退出系统"
+    echo "📝 录入管理："
+    echo "  1. 📝 录入错题"
+    echo "  2. 📥 批量导入错题"
+    echo "  3. ✏️  编辑错题"
+    echo ""
+    echo "🔧 批量处理："
+    echo "  4. 📋 批量修改标签"
+    echo "  5. 📤 批量导出错题"
+    echo "  6. 🗑️  批量删除错题"
+    echo "  7. 🔄 批量重置状态"
+    echo "  8. 📝 批量修改错误原因"
+    echo "  9. 📊 批量统计分析"
+    echo ""
+    echo "📚 学习复习："
+    echo "  10. 📚 复习错题"
+    echo "  11. 📊 统计报告"
+    echo ""
+    echo "⚙️  系统设置："
+    echo "  12. ⏰ 安装定时任务"
+    echo "  13. ❓ 帮助信息"
+    echo "  14. 🚪 退出系统"
     echo "=================================="
 }
 
@@ -61,7 +75,13 @@ show_help() {
     echo "=================================="
     echo "📚 系统功能说明："
     echo "  • 录入错题：添加新的错题记录"
+    echo "  • 批量导入：从文件批量导入错题"
     echo "  • 编辑错题：修改现有错题内容"
+    echo "  • 批量修改：批量修改标签、错误原因等"
+    echo "  • 批量导出：导出指定范围的错题"
+    echo "  • 批量删除：删除指定范围的错题"
+    echo "  • 批量重置：重置复习状态"
+    echo "  • 批量统计：查看学习统计分析"
     echo "  • 复习错题：查看待复习的错题"
     echo "  • 统计报告：查看学习统计数据"
     echo "  • 定时任务：设置自动提醒"
@@ -74,12 +94,28 @@ show_help() {
     read -n 1 -s
 }
 
+# 显示子菜单
+show_batch_menu() {
+    clear
+    echo "=================================="
+    echo "       批量处理子菜单"
+    echo "=================================="
+    echo "1. 📋 批量修改标签"
+    echo "2. 📤 批量导出错题"
+    echo "3. 🗑️  批量删除错题"
+    echo "4. 🔄 批量重置状态"
+    echo "5. 📝 批量修改错误原因"
+    echo "6. 📊 批量统计分析"
+    echo "7. 🏠 返回主菜单"
+    echo "=================================="
+}
+
 # 主循环
 main_loop() {
     while true; do
         show_menu
         
-        read -p "请选择操作 (1-7): " choice
+        read -p "请选择操作 (1-14): " choice
         echo ""
         
         case $choice in
@@ -89,32 +125,67 @@ main_loop() {
                 "$PROJECT_ROOT/scripts/core/add_note.sh"
                 ;;
             2) 
+                echo "📥 启动批量导入模块..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/import_note.sh"
+                ;;
+            3) 
                 read -p "请输入要编辑的错题ID: " id
                 "$PROJECT_ROOT/scripts/core/edit_note.sh" "$id"
                 ;;
-            3) 
+            4) 
+                echo "📋 启动批量修改标签..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/batch_process.sh"
+                ;;
+            5) 
+                echo "📤 启动批量导出错题..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/batch_process.sh"
+                ;;
+            6) 
+                echo "🗑️ 启动批量删除错题..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/batch_process.sh"
+                ;;
+            7) 
+                echo "🔄 启动批量重置状态..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/batch_process.sh"
+                ;;
+            8) 
+                echo "📝 启动批量修改错误原因..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/batch_process.sh"
+                ;;
+            9) 
+                echo "📊 启动批量统计分析..."
+                sleep 1
+                "$PROJECT_ROOT/scripts/core/batch_process.sh"
+                ;;
+            10) 
                 echo "📚 启动复习模块..."
                 sleep 1
                 "$PROJECT_ROOT/scripts/core/review_notify.sh"
                 ;;
-            4) 
+            11) 
                 echo "📊 启动统计模块..."
                 sleep 1
                 "$PROJECT_ROOT/scripts/core/stat_report.sh"
                 ;;
-            5) 
+            12) 
                 echo "⏰ 安装定时任务..."
                 "$PROJECT_ROOT/scripts/utils/install_cron.sh"
                 ;;
-            6) 
+            13) 
                 show_help
                 ;;
-            7) 
+            14) 
                 echo "👋 感谢使用！再见！"
                 exit 0
                 ;;
             *) 
-                echo "❌ 无效选择，请输入 1-7"
+                echo "❌ 无效选择，请输入 1-14"
                 sleep 2
                 ;;
         esac
@@ -128,7 +199,7 @@ main_loop() {
 # 主函数
 main() {
     echo "=================================="
-    echo "    全场景错题管理系统 v1.0"
+    echo "    全场景错题管理系统 v2.0"
     echo "=================================="
     echo "启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
     echo ""
