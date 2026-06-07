@@ -19,7 +19,7 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 # 检查依赖
 check_dependencies() {
     log_info "检查系统依赖..."
-    local deps=("bash" "grep" "find" "sed" "awk" "xmessage")
+    local deps=("bash" "grep" "find" "sed" "awk" "xmessage" "bc")
     local missing=()
     
     for dep in "${deps[@]}"; do
@@ -51,6 +51,8 @@ verify_project_structure() {
         "scripts/core/review_notify.sh"
         "scripts/core/exception_handler.sh"
         "scripts/core/stat_report.sh"
+        "scripts/core/import_note.sh"
+        "scripts/core/batch_process.sh"
         "scripts/utils/common.sh"
         "scripts/utils/install_cron.sh"
         "config/global.conf"
@@ -100,6 +102,13 @@ create_subdirectories() {
         mkdir -p "$subdir"
         log_success "创建目录: $subdir"
     done
+    
+    # 为默认科目创建子目录
+    source ./config/global.conf
+    for subject in "${SUBJECTS[@]}"; do
+        mkdir -p "data/subjects/$subject"
+        log_success "创建科目目录: data/subjects/$subject"
+    done
 }
 
 # 设置脚本权限
@@ -128,6 +137,7 @@ initialize_config() {
     if [ ! -f "config/global.conf" ]; then
         cat > "config/global.conf" << 'EOF_CONFIG'
 # 全局配置文件
+SUBJECTS=("数学" "语文" "英语" "物理" "化学" "生物" "历史" "地理" "政治")
 DEFAULT_SUBJECT="数学"
 MAX_REVISIONS=5
 NOTIFICATION_ENABLED=true
@@ -160,6 +170,8 @@ verify_installation() {
         "scripts/core/review_notify.sh"
         "scripts/core/exception_handler.sh"
         "scripts/core/stat_report.sh"
+        "scripts/core/import_note.sh"
+        "scripts/core/batch_process.sh"
     )
     
     for script in "${core_scripts[@]}"; do
@@ -193,6 +205,19 @@ verify_installation() {
         log_error "数据目录未创建"
         exit 1
     fi
+    
+    # 检查科目子目录
+    local subjects_ok=true
+    for subject in "${SUBJECTS[@]}"; do
+        if [ ! -d "./data/subjects/$subject" ]; then
+            log_error "科目目录未创建: ./data/subjects/$subject"
+            subjects_ok=false
+        fi
+    done
+    
+    if [ "$subjects_ok" = true ]; then
+        log_success "科目目录已准备就绪"
+    fi
 }
 
 # 显示使用说明
@@ -204,6 +229,8 @@ show_usage_instructions() {
     echo -e "${BLUE}🚀 立即开始使用：${NC}"
     echo "   ./start.sh                          # 启动系统主界面"
     echo "   ./scripts/core/add_note.sh         # 直接录入错题"
+    echo "   ./scripts/core/import_note.sh      # 批量导入错题"
+    echo "   ./scripts/core/batch_process.sh    # 批量处理错题"
     echo "   ./scripts/core/review_notify.sh    # 直接复习错题"
     echo "   ./scripts/utils/install_cron.sh    # 安装定时提醒"
     echo
@@ -212,6 +239,7 @@ show_usage_instructions() {
     echo "   - 数据目录: $(pwd)/data/"
     echo "   - 配置文件: $(pwd)/config/global.conf"
     echo "   - 当前ID计数: $(cat "data/id_counter.txt")"
+    echo "   - 支持科目: $(source ./config/global.conf; IFS=','; echo "${SUBJECTS[*]}")"
     echo
     echo -e "${BLUE}📖 项目信息：${NC}"
     echo "   安装时间: $(date '+%Y-%m-%d %H:%M:%S')"
